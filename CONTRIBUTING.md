@@ -1,12 +1,12 @@
-# Contributing to slf4j.osgi
+# Contributing to slf4j-osgi
 
-Want to hack on slf4j.osgi? Here are instructions to get you
+Want to hack on slf4j-osgi? Here are instructions to get you
 started. They are probably not perfect, please let us know if anything
 feels wrong or incomplete.
 
 ## Reporting Issues
 
-When reporting [issues](https://github.com/osgi/slf4j.osgi/issues) 
+When reporting [issues](https://github.com/osgi/slf4j-osgi/issues) 
 on GitHub please include the steps required to reproduce the problem if possible and applicable.
 This information will help us review and fix your issue faster.
 
@@ -18,29 +18,29 @@ at least version 2.3.
 
 `./gradlew build`    - Assembles and tests the projects  
 
-We use [Travis CI](https://travis-ci.org/osgi/slf4j.osgi) and the repo includes a
+We use [Travis CI](https://travis-ci.org/osgi/slf4j-osgi) and the repo includes a
 `.travis.yml` file to build on Travis CI.
 
 ## Workflow
 
 We use [git triangular workflow](https://www.sociomantic.com/blog/2014/05/git-triangular-workflow/).
-This means that no one, not even the slf4j.osgi maintainers, push contributions directly into the [main slf4j.osgi
-repo](https://github.com/osgi/slf4j.osgi). All contribution come in through pull requests.
-So each contribtor will need to [fork the main slf4j.osgi repo](https://github.com/osgi/slf4j.osgi/fork)
+This means that no one, not even the slf4j-osgi maintainers, push contributions directly into the [main slf4j-osgi
+repo](https://github.com/osgi/slf4j-osgi). All contribution come in through pull requests.
+So each contribtor will need to [fork the main slf4j-osgi repo](https://github.com/osgi/slf4j-osgi/fork)
 on GitHub. All contributions are made as commits to your fork. Then you submit a
-pull request to have them considered for merging into the main slf4j.osgi repo.
+pull request to have them considered for merging into the main slf4j-osgi repo.
 
 ### Setting up the triangular workflow
 
-After forking the main slf4j.osgi repo on GitHub, you can clone the main repo to your system:
+After forking the main slf4j-osgi repo on GitHub, you can clone the main repo to your system:
 
-    git clone https://github.com/osgi/slf4j.osgi.git
+    git clone https://github.com/osgi/slf4j-osgi.git
 
 This will clone the main repo to a local repo on your disk and set up the `origin` remote in Git.
 Next you will set up the the second side of the triangle to your fork repo.
 
-    cd slf4j.osgi
-    git remote add fork git@github.com:github-user/slf4j.osgi.git
+    cd slf4j-osgi
+    git remote add fork git@github.com:github-user/slf4j-osgi.git
 
 Make sure to replace the URL with the SSH URL to your fork repo on GitHub. Then we configure
 the local repo to push your commits to the fork repo.
@@ -59,7 +59,7 @@ main repo.
 
 Make sure to set up [Travis CI](https://travis-ci.org) for your fork repo to test your commits
 when they are pushed to your fork repo. Travis CI will also build any [pull requests you 
-submit](https://travis-ci.org/osgi/slf4j.osgi/pull_requests).
+submit](https://travis-ci.org/osgi/slf4j-osgi/pull_requests).
 
 ## Contribution guidelines
 
@@ -76,7 +76,7 @@ received feedback on what to improve.
 ### Create issues...
 
 Any significant improvement should be documented as [a GitHub
-issue](https://github.com/osgi/slf4j.osgi/issues) before anybody
+issue](https://github.com/osgi/slf4j-osgi/issues) before anybody
 starts working on it.
 
 ### ...but check for existing issues first!
@@ -195,7 +195,7 @@ There are some exceptions to the signing requirement. Currently these are:
 
 ### Merge approval
 
-The slf4j.osgi maintainers will review your pull request and, if approved, will merge into
+The slf4j-osgi maintainers will review your pull request and, if approved, will merge into
 the main repo.
 
 ### How can I become a maintainer?
