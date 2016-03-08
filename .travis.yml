@@ -1,0 +1,17 @@
+sudo: false
+
+language: java
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+install:
+  - ./gradlew --version
+
+script:
+  - ./gradlew --continue build
+
+cache:
+  directories:
+    - $HOME/.gradle
