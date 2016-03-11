@@ -19,11 +19,14 @@ ext.buildDate = new Date()
 
 repositories {
   mavenCentral()
+  flatDir {
+    dirs 'libs'
+  }
 }
 dependencies {
     compile "org.slf4j:slf4j-api:${slf4jversion}"
     compile 'org.osgi:osgi.core:6.0.0'
-    compile files('libs/org.osgi.service.log-1.4.0.jar')
+    compile 'org.osgi:org.osgi.service.log:1.4.0'
     testCompile 'junit:junit:3.8.2'
 }
 
@@ -49,7 +52,6 @@ Git-SHA: \${system-allow-fail;git rev-list -1 HEAD}
 -pom: groupid=${project.group}, artifactid=${baseName}, version=${version}
 Fragment-Host: slf4j.api
 Export-Package: org.slf4j.impl;version=${slf4jversion}
-Import-Package: !org.slf4j.*,*
 -sources: true
 """
 }
