@@ -30,6 +30,11 @@ import org.slf4j.helpers.MessageFormatter;
  */
 class SLF4JLogger extends MarkerIgnoringBase {
 	private static final long			serialVersionUID	= 1L;
+	private static final boolean		TRACE_ENABLED		= false;
+	private static final boolean		DEBUG_ENABLED		= false;
+	private static final boolean		INFO_ENABLED		= false;
+	private static final boolean		WARN_ENABLED		= true;
+	private static final boolean		ERROR_ENABLED		= true;
 	private final Bundle				bundle;
 	private final LoggerFactoryTracker	tracker;
 
@@ -49,7 +54,7 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		if (logger != null) {
 			return logger.isTraceEnabled();
 		}
-		return true;
+		return TRACE_ENABLED;
 	}
 
 	@Override
@@ -59,7 +64,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.trace(msg);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.TRACE, msg, null);
+		if (TRACE_ENABLED) {
+			tracker.log(bundle, name, LogLevel.TRACE, msg, null);
+		}
 	}
 
 	@Override
@@ -69,7 +76,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.trace(msg, t);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.TRACE, msg, t);
+		if (TRACE_ENABLED) {
+			tracker.log(bundle, name, LogLevel.TRACE, msg, t);
+		}
 	}
 
 	@Override
@@ -82,7 +91,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, arg1);
+		if (TRACE_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, arg1);
+		}
 	}
 
 	@Override
@@ -95,7 +106,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, arg1, arg2);
+		if (TRACE_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, arg1, arg2);
+		}
 	}
 
 	@Override
@@ -108,7 +121,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, argArray);
+		if (TRACE_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, argArray);
+		}
 	}
 
 	@Override
@@ -117,7 +132,7 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		if (logger != null) {
 			return logger.isDebugEnabled();
 		}
-		return true;
+		return DEBUG_ENABLED;
 	}
 
 	@Override
@@ -127,7 +142,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.debug(msg);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.DEBUG, msg, null);
+		if (DEBUG_ENABLED) {
+			tracker.log(bundle, name, LogLevel.DEBUG, msg, null);
+		}
 	}
 
 	@Override
@@ -137,7 +154,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.debug(msg, t);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.DEBUG, msg, t);
+		if (DEBUG_ENABLED) {
+			tracker.log(bundle, name, LogLevel.DEBUG, msg, t);
+		}
 	}
 
 	@Override
@@ -150,7 +169,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, arg1);
+		if (DEBUG_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, arg1);
+		}
 	}
 
 	@Override
@@ -163,7 +184,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, arg1, arg2);
+		if (DEBUG_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, arg1, arg2);
+		}
 	}
 
 	@Override
@@ -176,7 +199,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, argArray);
+		if (DEBUG_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, argArray);
+		}
 	}
 
 	@Override
@@ -185,7 +210,7 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		if (logger != null) {
 			return logger.isInfoEnabled();
 		}
-		return true;
+		return INFO_ENABLED;
 	}
 
 	@Override
@@ -195,7 +220,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.info(msg);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.INFO, msg, null);
+		if (INFO_ENABLED) {
+			tracker.log(bundle, name, LogLevel.INFO, msg, null);
+		}
 	}
 
 	@Override
@@ -205,7 +232,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.info(msg, t);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.INFO, msg, t);
+		if (INFO_ENABLED) {
+			tracker.log(bundle, name, LogLevel.INFO, msg, t);
+		}
 	}
 
 	@Override
@@ -218,7 +247,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.INFO, format, arg1);
+		if (INFO_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.INFO, format, arg1);
+		}
 	}
 
 	@Override
@@ -231,7 +262,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.INFO, format, arg1, arg2);
+		if (INFO_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.INFO, format, arg1, arg2);
+		}
 	}
 
 	@Override
@@ -244,7 +277,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.INFO, format, argArray);
+		if (INFO_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.INFO, format, argArray);
+		}
 	}
 
 	@Override
@@ -253,7 +288,7 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		if (logger != null) {
 			return logger.isWarnEnabled();
 		}
-		return true;
+		return WARN_ENABLED;
 	}
 
 	@Override
@@ -263,7 +298,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.warn(msg);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.WARN, msg, null);
+		if (WARN_ENABLED) {
+			tracker.log(bundle, name, LogLevel.WARN, msg, null);
+		}
 	}
 
 	@Override
@@ -273,7 +310,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.warn(msg, t);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.WARN, msg, t);
+		if (WARN_ENABLED) {
+			tracker.log(bundle, name, LogLevel.WARN, msg, t);
+		}
 	}
 
 	@Override
@@ -286,7 +325,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.WARN, format, arg1);
+		if (WARN_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.WARN, format, arg1);
+		}
 	}
 
 	@Override
@@ -299,7 +340,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.WARN, format, arg1, arg2);
+		if (WARN_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.WARN, format, arg1, arg2);
+		}
 	}
 
 	@Override
@@ -312,7 +355,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.WARN, format, argArray);
+		if (WARN_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.WARN, format, argArray);
+		}
 	}
 
 	@Override
@@ -321,7 +366,7 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		if (logger != null) {
 			return logger.isErrorEnabled();
 		}
-		return true;
+		return ERROR_ENABLED;
 	}
 
 	@Override
@@ -331,7 +376,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.error(msg);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.ERROR, msg, null);
+		if (ERROR_ENABLED) {
+			tracker.log(bundle, name, LogLevel.ERROR, msg, null);
+		}
 	}
 
 	@Override
@@ -341,7 +388,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			logger.error(msg, t);
 			return;
 		}
-		tracker.log(bundle, name, LogLevel.ERROR, msg, t);
+		if (ERROR_ENABLED) {
+			tracker.log(bundle, name, LogLevel.ERROR, msg, t);
+		}
 	}
 
 	@Override
@@ -354,7 +403,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, arg1);
+		if (ERROR_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, arg1);
+		}
 	}
 
 	@Override
@@ -367,7 +418,9 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, arg1, arg2);
+		if (ERROR_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, arg1, arg2);
+		}
 	}
 
 	@Override
@@ -380,6 +433,8 @@ class SLF4JLogger extends MarkerIgnoringBase {
 			}
 			return;
 		}
-		tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, argArray);
+		if (ERROR_ENABLED) {
+			tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, argArray);
+		}
 	}
 }

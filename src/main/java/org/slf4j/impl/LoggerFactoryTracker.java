@@ -16,6 +16,13 @@
 
 package org.slf4j.impl;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -31,46 +38,117 @@ import org.slf4j.helpers.MessageFormatter;
  * 
  * @author $Id$
  */
-class LoggerFactoryTracker extends ServiceTracker<LoggerFactory,LoggerFactory> {
+class LoggerFactoryTracker extends ServiceTracker<Object,Object> {
+	static class Entry {
+		private final Bundle	bundle;
+		private final String	name;
+		private final LogLevel	level;
+		private final String	message;
+		private final Throwable	t;
+
+		Entry(Bundle bundle, String name, LogLevel level, String message, Throwable t) {
+			this.bundle = bundle;
+			this.name = name;
+			this.level = level;
+			this.message = message;
+			this.t = t;
+		}
+
+		@Override
+		public String toString() {
+			StringWriter buf = new StringWriter(32);
+			buf.append(level.name());
+			buf.append(' ');
+			buf.append(name);
+			buf.append(" - ");
+			buf.append(message);
+			if (t != null) {
+				t.printStackTrace(new PrintWriter(buf));
+			}
+			return buf.toString();
+		}
+
+		void log(LoggerFactory factory) {
+			Logger logger = factory.getLogger(bundle, name, Logger.class);
+			switch (level) {
+				case TRACE :
+					logger.trace(message, t);
+					break;
+				case DEBUG :
+					logger.debug(message, t);
+					break;
+				case INFO :
+					logger.info(message, t);
+					break;
+				case WARN :
+					logger.warn(message, t);
+					break;
+				case ERROR :
+					logger.error(message, t);
+					break;
+				default :
+					logger.audit(message, t);
+					break;
+			}
+		}
+	}
+
+	private static final int			QUEUE_SIZE		= 200;
+	private final BlockingQueue<Entry>	queue;
+	private volatile LoggerFactory		firstFactory	= null;
 
 	LoggerFactoryTracker(BundleContext context) {
-		super(context, LoggerFactory.class, null);
+		super(context, LoggerFactory.class.getName(), null);
+		queue = new LinkedBlockingQueue<>(QUEUE_SIZE);
 	}
 
 	@Override
-	public LoggerFactory addingService(ServiceReference<LoggerFactory> reference) {
-		return super.addingService(reference);
+	public Object addingService(ServiceReference<Object> reference) {
+		// We use system bundle context and track all
+		Object service = context.getService(reference);
+		if (service instanceof LoggerFactory) {
+			if (isEmpty()) {
+				LoggerFactory factory = (LoggerFactory) service;
+				drain(factory);
+				firstFactory = factory;
+			}
+			return service;
+		}
+		// service is not typesafe for us
+		if (service != null) {
+			context.ungetService(reference);
+		}
+		return null;
 	}
 
 	@Override
-	public void modifiedService(ServiceReference<LoggerFactory> reference, LoggerFactory service) {
-		super.modifiedService(reference, service);
+	public void removedService(ServiceReference<Object> reference, Object service) {
+		firstFactory = null;
+		context.ungetService(reference);
 	}
 
-	@Override
-	public void removedService(ServiceReference<LoggerFactory> reference, LoggerFactory service) {
-		super.removedService(reference, service);
+	private void drain(LoggerFactory factory) {
+		if ((factory == null) || queue.isEmpty()) {
+			return;
+		}
+		List<Entry> entries = new ArrayList<>(QUEUE_SIZE);
+		queue.drainTo(entries);
+		for (Entry entry : entries) {
+			entry.log(factory);
+		}
 	}
 
 	void log(Bundle bundle, String name, LogLevel level, String message, Throwable t) {
-		StringBuilder buf = new StringBuilder(32);
-		buf.append('[');
-		buf.append(Thread.currentThread().getName());
-		buf.append("] ");
-
-		buf.append(level.name());
-		buf.append(' ');
-
-		buf.append(name);
-		buf.append(" - ");
-
-		buf.append(message);
-
-		System.err.println(buf.toString());
-		if (t != null) {
-			t.printStackTrace(System.err);
+		Entry e = new Entry(bundle, name, level, message, t);
+		while (!queue.offer(e)) {
+			// queue is full! Dump queue to System.err.
+			List<Entry> entries = new ArrayList<>(QUEUE_SIZE);
+			queue.drainTo(entries);
+			for (Entry entry : entries) {
+				System.err.println(entry);
+				System.err.flush();
+			}
 		}
-		System.err.flush();
 	}
 
 	void formatAndLog(Bundle bundle, String name, LogLevel level, String format, Object... arguments) {
@@ -79,8 +157,12 @@ class LoggerFactoryTracker extends ServiceTracker<LoggerFactory,LoggerFactory> {
 	}
 
 	Logger getLogger(Bundle bundle, String name) {
-		LoggerFactory factory = getService();
+		LoggerFactory factory = (LoggerFactory) getService();
+		if (factory == null) {
+			factory = firstFactory;
+		}
 		if (factory != null) {
+			drain(factory);
 			return factory.getLogger(bundle, name, Logger.class);
 		}
 		return null;

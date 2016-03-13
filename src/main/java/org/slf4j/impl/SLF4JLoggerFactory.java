@@ -42,7 +42,7 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		private static final Bundle										self;
 		private static final BundleContext								systemBundleContext;
 		private static final LoggerFactoryTracker						tracker;
-		private static final Central									context;
+		private static final Central									central;
 		private static final ConcurrentMap<Bundle,SLF4JLoggerFactory>	factories;
 		static {
 			self = FrameworkUtil.getBundle(SLF4JLoggerFactory.class);
@@ -51,12 +51,12 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 			assert systemBundleContext != null;
 			tracker = new LoggerFactoryTracker(systemBundleContext);
 			factories = new ConcurrentHashMap<>();
-			context = AccessController.doPrivileged(new PrivilegedAction<Central>() {
+			central = AccessController.doPrivileged(new PrivilegedAction<Central>() {
 				@Override
 				public Central run() {
 					Central c = new Central();
 					systemBundleContext.addBundleListener(c);
-					tracker.open();
+					tracker.open(true);
 					return c;
 				}
 			});
@@ -89,7 +89,7 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 					continue;
 				}
 				if (foundGetLogger) {
-					Class< ? >[] callers = context.getClassContext();
+					Class< ? >[] callers = central.getClassContext();
 					Class< ? > caller = callers[i - 1];
 					Bundle b = FrameworkUtil.getBundle(caller);
 					return b != null ? b : self;
