@@ -30,8 +30,6 @@ import org.osgi.service.log.LogLevel;
 import org.osgi.service.log.Logger;
 import org.osgi.service.log.LoggerFactory;
 import org.osgi.util.tracker.ServiceTracker;
-import org.slf4j.helpers.FormattingTuple;
-import org.slf4j.helpers.MessageFormatter;
 
 /**
  * slf4j-osgi implementation OSGi Logger handler.
@@ -149,11 +147,6 @@ class LoggerFactoryTracker extends ServiceTracker<Object,Object> {
 				System.err.flush();
 			}
 		}
-	}
-
-	void formatAndLog(Bundle bundle, String name, LogLevel level, String format, Object... arguments) {
-		FormattingTuple tp = MessageFormatter.arrayFormat(format, arguments);
-		log(bundle, name, level, tp.getMessage(), tp.getThrowable());
 	}
 
 	Logger getLogger(Bundle bundle, String name) {

@@ -29,14 +29,10 @@ import org.slf4j.helpers.MessageFormatter;
  * @author $Id$
  */
 class SLF4JLogger extends MarkerIgnoringBase {
-	private static final long			serialVersionUID	= 1L;
-	private static final boolean		TRACE_ENABLED		= false;
-	private static final boolean		DEBUG_ENABLED		= false;
-	private static final boolean		INFO_ENABLED		= false;
-	private static final boolean		WARN_ENABLED		= true;
-	private static final boolean		ERROR_ENABLED		= true;
-	private final Bundle				bundle;
-	private final LoggerFactoryTracker	tracker;
+	private static final long	serialVersionUID	= 1L;
+	final Bundle				bundle;
+	final LoggerFactoryTracker	tracker;
+	private volatile Logger		stub;
 
 	SLF4JLogger(Bundle bundle, String name) {
 		this.name = name;
@@ -45,396 +41,439 @@ class SLF4JLogger extends MarkerIgnoringBase {
 	}
 
 	private Logger getLogger() {
-		return tracker.getLogger(bundle, name);
+		Logger logger = tracker.getLogger(bundle, name);
+		if (logger == null) {
+			logger = stub;
+			if (logger == null) {
+				stub = logger = new StubLogger();
+			}
+		}
+		return logger;
 	}
 
 	@Override
 	public boolean isTraceEnabled() {
 		Logger logger = getLogger();
-		if (logger != null) {
-			return logger.isTraceEnabled();
-		}
-		return TRACE_ENABLED;
+		return logger.isTraceEnabled();
 	}
 
 	@Override
 	public void trace(String msg) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.trace(msg);
-			return;
-		}
-		if (TRACE_ENABLED) {
-			tracker.log(bundle, name, LogLevel.TRACE, msg, null);
-		}
+		logger.trace(msg);
 	}
 
 	@Override
 	public void trace(String msg, Throwable t) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.trace(msg, t);
-			return;
-		}
-		if (TRACE_ENABLED) {
-			tracker.log(bundle, name, LogLevel.TRACE, msg, t);
-		}
+		logger.trace(msg, t);
 	}
 
 	@Override
 	public void trace(String format, Object arg1) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isTraceEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1);
-				logger.trace(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (TRACE_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, arg1);
+		if (logger.isTraceEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1);
+			logger.trace(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void trace(String format, Object arg1, Object arg2) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isTraceEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
-				logger.trace(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (TRACE_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, arg1, arg2);
+		if (logger.isTraceEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
+			logger.trace(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void trace(String format, Object... argArray) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isTraceEnabled()) {
-				FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
-				logger.trace(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (TRACE_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.TRACE, format, argArray);
+		if (logger.isTraceEnabled()) {
+			FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
+			logger.trace(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public boolean isDebugEnabled() {
 		Logger logger = getLogger();
-		if (logger != null) {
-			return logger.isDebugEnabled();
-		}
-		return DEBUG_ENABLED;
+		return logger.isDebugEnabled();
 	}
 
 	@Override
 	public void debug(String msg) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.debug(msg);
-			return;
-		}
-		if (DEBUG_ENABLED) {
-			tracker.log(bundle, name, LogLevel.DEBUG, msg, null);
-		}
+		logger.debug(msg);
 	}
 
 	@Override
 	public void debug(String msg, Throwable t) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.debug(msg, t);
-			return;
-		}
-		if (DEBUG_ENABLED) {
-			tracker.log(bundle, name, LogLevel.DEBUG, msg, t);
-		}
+		logger.debug(msg, t);
 	}
 
 	@Override
 	public void debug(String format, Object arg1) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isDebugEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1);
-				logger.debug(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (DEBUG_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, arg1);
+		if (logger.isDebugEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1);
+			logger.debug(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void debug(String format, Object arg1, Object arg2) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isDebugEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
-				logger.debug(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (DEBUG_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, arg1, arg2);
+		if (logger.isDebugEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
+			logger.debug(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void debug(String format, Object... argArray) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isDebugEnabled()) {
-				FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
-				logger.debug(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (DEBUG_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.DEBUG, format, argArray);
+		if (logger.isDebugEnabled()) {
+			FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
+			logger.debug(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public boolean isInfoEnabled() {
 		Logger logger = getLogger();
-		if (logger != null) {
-			return logger.isInfoEnabled();
-		}
-		return INFO_ENABLED;
+		return logger.isInfoEnabled();
 	}
 
 	@Override
 	public void info(String msg) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.info(msg);
-			return;
-		}
-		if (INFO_ENABLED) {
-			tracker.log(bundle, name, LogLevel.INFO, msg, null);
-		}
+		logger.info(msg);
 	}
 
 	@Override
 	public void info(String msg, Throwable t) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.info(msg, t);
-			return;
-		}
-		if (INFO_ENABLED) {
-			tracker.log(bundle, name, LogLevel.INFO, msg, t);
-		}
+		logger.info(msg, t);
 	}
 
 	@Override
 	public void info(String format, Object arg1) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isInfoEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1);
-				logger.info(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (INFO_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.INFO, format, arg1);
+		if (logger.isInfoEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1);
+			logger.info(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void info(String format, Object arg1, Object arg2) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isInfoEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
-				logger.info(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (INFO_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.INFO, format, arg1, arg2);
+		if (logger.isInfoEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
+			logger.info(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void info(String format, Object... argArray) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isInfoEnabled()) {
-				FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
-				logger.info(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (INFO_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.INFO, format, argArray);
+		if (logger.isInfoEnabled()) {
+			FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
+			logger.info(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public boolean isWarnEnabled() {
 		Logger logger = getLogger();
-		if (logger != null) {
-			return logger.isWarnEnabled();
-		}
-		return WARN_ENABLED;
+		return logger.isWarnEnabled();
 	}
 
 	@Override
 	public void warn(String msg) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.warn(msg);
-			return;
-		}
-		if (WARN_ENABLED) {
-			tracker.log(bundle, name, LogLevel.WARN, msg, null);
-		}
+		logger.warn(msg);
 	}
 
 	@Override
 	public void warn(String msg, Throwable t) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.warn(msg, t);
-			return;
-		}
-		if (WARN_ENABLED) {
-			tracker.log(bundle, name, LogLevel.WARN, msg, t);
-		}
+		logger.warn(msg, t);
 	}
 
 	@Override
 	public void warn(String format, Object arg1) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isWarnEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1);
-				logger.warn(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (WARN_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.WARN, format, arg1);
+		if (logger.isWarnEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1);
+			logger.warn(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void warn(String format, Object arg1, Object arg2) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isWarnEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
-				logger.warn(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (WARN_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.WARN, format, arg1, arg2);
+		if (logger.isWarnEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
+			logger.warn(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void warn(String format, Object... argArray) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isWarnEnabled()) {
-				FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
-				logger.warn(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (WARN_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.WARN, format, argArray);
+		if (logger.isWarnEnabled()) {
+			FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
+			logger.warn(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public boolean isErrorEnabled() {
 		Logger logger = getLogger();
-		if (logger != null) {
-			return logger.isErrorEnabled();
-		}
-		return ERROR_ENABLED;
+		return logger.isErrorEnabled();
 	}
 
 	@Override
 	public void error(String msg) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.error(msg);
-			return;
-		}
-		if (ERROR_ENABLED) {
-			tracker.log(bundle, name, LogLevel.ERROR, msg, null);
-		}
+		logger.error(msg);
 	}
 
 	@Override
 	public void error(String msg, Throwable t) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			logger.error(msg, t);
-			return;
-		}
-		if (ERROR_ENABLED) {
-			tracker.log(bundle, name, LogLevel.ERROR, msg, t);
-		}
+		logger.error(msg, t);
 	}
 
 	@Override
 	public void error(String format, Object arg1) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isErrorEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1);
-				logger.error(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (ERROR_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, arg1);
+		if (logger.isErrorEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1);
+			logger.error(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void error(String format, Object arg1, Object arg2) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isErrorEnabled()) {
-				FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
-				logger.error(tp.getMessage(), tp.getThrowable());
-			}
-			return;
-		}
-		if (ERROR_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, arg1, arg2);
+		if (logger.isErrorEnabled()) {
+			FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
+			logger.error(tp.getMessage(), tp.getThrowable());
 		}
 	}
 
 	@Override
 	public void error(String format, Object... argArray) {
 		Logger logger = getLogger();
-		if (logger != null) {
-			if (logger.isErrorEnabled()) {
-				FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
-				logger.error(tp.getMessage(), tp.getThrowable());
-			}
-			return;
+		if (logger.isErrorEnabled()) {
+			FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
+			logger.error(tp.getMessage(), tp.getThrowable());
 		}
-		if (ERROR_ENABLED) {
-			tracker.formatAndLog(bundle, name, LogLevel.ERROR, format, argArray);
+	}
+
+	/**
+	 * Used when no LoggerFactory is available.
+	 */
+	class StubLogger implements Logger {
+		private static final boolean	TRACE_ENABLED	= false;
+		private static final boolean	DEBUG_ENABLED	= false;
+		private static final boolean	INFO_ENABLED	= false;
+		private static final boolean	WARN_ENABLED	= true;
+		private static final boolean	ERROR_ENABLED	= true;
+
+		@Override
+		public String getName() {
+			return SLF4JLogger.this.getName();
+		}
+
+		@Override
+		public boolean isTraceEnabled() {
+			return TRACE_ENABLED;
+		}
+
+		@Override
+		public void trace(String msg) {
+			if (TRACE_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.TRACE, msg, null);
+			}
+		}
+
+		@Override
+		public void trace(String msg, Object t) {
+			if (TRACE_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.TRACE, msg, (Throwable) t);
+			}
+		}
+
+		@Override
+		public void trace(String format, Object arg1, Object arg2) {
+			if (TRACE_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public void trace(String format, Object... arguments) {
+			if (TRACE_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public boolean isDebugEnabled() {
+			return DEBUG_ENABLED;
+		}
+
+		@Override
+		public void debug(String msg) {
+			if (DEBUG_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.DEBUG, msg, null);
+			}
+		}
+
+		@Override
+		public void debug(String msg, Object t) {
+			if (DEBUG_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.DEBUG, msg, (Throwable) t);
+			}
+		}
+
+		@Override
+		public void debug(String format, Object arg1, Object arg2) {
+			if (DEBUG_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public void debug(String format, Object... arguments) {
+			if (DEBUG_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public boolean isInfoEnabled() {
+			return INFO_ENABLED;
+		}
+
+		@Override
+		public void info(String msg) {
+			if (INFO_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.INFO, msg, null);
+			}
+		}
+
+		@Override
+		public void info(String msg, Object t) {
+			if (INFO_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.INFO, msg, (Throwable) t);
+			}
+		}
+
+		@Override
+		public void info(String format, Object arg1, Object arg2) {
+			if (INFO_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public void info(String format, Object... arguments) {
+			if (INFO_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public boolean isWarnEnabled() {
+			return WARN_ENABLED;
+		}
+
+		@Override
+		public void warn(String msg) {
+			if (WARN_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.WARN, msg, null);
+			}
+		}
+
+		@Override
+		public void warn(String msg, Object t) {
+			if (WARN_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.WARN, msg, (Throwable) t);
+			}
+		}
+
+		@Override
+		public void warn(String format, Object arg1, Object arg2) {
+			if (WARN_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public void warn(String format, Object... arguments) {
+			if (WARN_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public boolean isErrorEnabled() {
+			return ERROR_ENABLED;
+		}
+
+		@Override
+		public void error(String msg) {
+			if (ERROR_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.ERROR, msg, null);
+			}
+		}
+
+		@Override
+		public void error(String msg, Object t) {
+			if (ERROR_ENABLED) {
+				tracker.log(bundle, getName(), LogLevel.ERROR, msg, (Throwable) t);
+			}
+		}
+
+		@Override
+		public void error(String format, Object arg1, Object arg2) {
+			if (ERROR_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public void error(String format, Object... arguments) {
+			if (ERROR_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public void audit(String message) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void audit(String format, Object arg) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void audit(String format, Object arg1, Object arg2) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void audit(String format, Object... arguments) {
+			throw new UnsupportedOperationException();
 		}
 	}
 }
