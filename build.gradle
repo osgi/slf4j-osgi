@@ -8,9 +8,8 @@ buildscript {
   }
 }
 
-import aQute.bnd.gradle.Bundle
-
 apply plugin: 'biz.aQute.bnd.builder'
+apply plugin: 'eclipse'
 
 group = 'org.osgi'
 version = '1.7.0'
@@ -31,7 +30,7 @@ dependencies {
 }
 
 jar {
-   bndfile = File.createTempFile(baseName, '.bnd', temporaryDir)
+   bndfile = new File(temporaryDir, 'bnd.bnd')
    bndfile << """
 Bundle-License: Apache-2.0;\
  link="http://www.apache.org/licenses/LICENSE-2.0";\

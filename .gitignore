@@ -1,3 +1,6 @@
 /.gradle/
 /build/
 /.metadata/
+/.classpath
+/.project
+/.settings/
