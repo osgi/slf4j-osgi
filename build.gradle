@@ -19,14 +19,14 @@ ext.buildDate = new Date()
 
 repositories {
   mavenCentral()
-  flatDir {
-    dirs 'libs'
+  maven {
+    url 'https://oss.sonatype.org/content/repositories/osgi-snapshots'
   }
 }
 dependencies {
     compile "org.slf4j:slf4j-api:${slf4jversion}"
     compile 'org.osgi:osgi.core:6.0.0'
-    compile 'org.osgi:org.osgi.service.log:1.4.0'
+    compile 'org.osgi:org.osgi.service.log:1.4.0-SNAPSHOT'
     testCompile 'junit:junit:3.8.2'
 }
 
