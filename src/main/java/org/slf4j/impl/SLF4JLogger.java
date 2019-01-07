@@ -19,6 +19,7 @@ package org.slf4j.impl;
 import org.osgi.framework.Bundle;
 import org.osgi.service.log.LogLevel;
 import org.osgi.service.log.Logger;
+import org.osgi.service.log.LoggerConsumer;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
@@ -29,10 +30,10 @@ import org.slf4j.helpers.MessageFormatter;
  * @author $Id$
  */
 class SLF4JLogger extends MarkerIgnoringBase {
-	private static final long	serialVersionUID	= 1L;
-	final Bundle				bundle;
-	final LoggerFactoryTracker	tracker;
-	private volatile Logger		stub;
+	private static final long				serialVersionUID	= 1L;
+	final transient Bundle					bundle;
+	final transient LoggerFactoryTracker	tracker;
+	private transient volatile Logger		stub;
 
 	SLF4JLogger(Bundle bundle, String name) {
 		this.name = name;
@@ -325,6 +326,13 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		}
 
 		@Override
+		public <E extends Exception> void trace(LoggerConsumer<E> consumer) throws E {
+			if (TRACE_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
 		public boolean isDebugEnabled() {
 			return DEBUG_ENABLED;
 		}
@@ -352,6 +360,13 @@ class SLF4JLogger extends MarkerIgnoringBase {
 
 		@Override
 		public void debug(String format, Object... arguments) {
+			if (DEBUG_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public <E extends Exception> void debug(LoggerConsumer<E> consumer) throws E {
 			if (DEBUG_ENABLED) {
 				throw new UnsupportedOperationException();
 			}
@@ -391,6 +406,13 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		}
 
 		@Override
+		public <E extends Exception> void info(LoggerConsumer<E> consumer) throws E {
+			if (INFO_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
 		public boolean isWarnEnabled() {
 			return WARN_ENABLED;
 		}
@@ -418,6 +440,13 @@ class SLF4JLogger extends MarkerIgnoringBase {
 
 		@Override
 		public void warn(String format, Object... arguments) {
+			if (WARN_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
+		public <E extends Exception> void warn(LoggerConsumer<E> consumer) throws E {
 			if (WARN_ENABLED) {
 				throw new UnsupportedOperationException();
 			}
@@ -457,6 +486,13 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		}
 
 		@Override
+		public <E extends Exception> void error(LoggerConsumer<E> consumer) throws E {
+			if (ERROR_ENABLED) {
+				throw new UnsupportedOperationException();
+			}
+		}
+
+		@Override
 		public void audit(String message) {
 			throw new UnsupportedOperationException();
 		}
@@ -475,5 +511,6 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		public void audit(String format, Object... arguments) {
 			throw new UnsupportedOperationException();
 		}
+
 	}
 }
