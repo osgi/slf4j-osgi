@@ -2,16 +2,36 @@ sudo: false
 
 language: java
 
-jdk:
-  - oraclejdk7
-  - oraclejdk8
+env:
+  global:
+
+matrix:
+  include:
+    - name: "OpenJDK8"
+      env:
+        - secure: dVvdiKYnBghgm4blVO3Qv7YS1fhv8aZrv51jlqaiP0RbigvHDsq5PJA+kRcn480KlAwcWaOxDsiaVKKqIrZj9gvWKI6qFQqqKic7tNoWYf1KS5pHKxBCnQIy2ugqIi6Nz1LVSniYnV1rMmykN1hn8Yjco/v4Yfl2buOsX7kzyzppmKdSjOHoPhJlKBH+7b+zDt99d7luvdEet8GNVMd8XX2qgvHz3TGxPBKEnyue/8tbe3IF+Vvt8Ohgy8U87uKTUyTqBObglCIn5KDVIliEdcv5TCsleTVyhCIyOg9zZeHxC+UZr7UxzJ+hcVdZH9xzHWSPiUQefTK2qBAOMlWsDok2XDqljl00YoPzidRbESHkY+t18yjmpcDGPCEZTgZxiCwUTCvT1ICBGh0tg755YAY53kF9kHaLbGHJ9YFVhmzw+eNWM/qTeoGShZxKw56psXFaGBd/3HS5SGMlAYoJzGKsIWhPtNJwF2PLTUlbu9fVbN1MrUMlLNy48g79opMflrEFchblb2yMDblAfNJBqoNIw8VMWkVjmMMre9eLW6wpN8EPtmUM3cN3CRlrmMGB2R6aCqwcD36ihJ0nU9vQOo0de2I2FI7mE6/y+i+4AlOltao8gDRM/FvB4GuwiXuTpAm9UXLubunxxw6Ei3IOdeo+t21VJhqTDcwSBWZEigM=
+  allow_failures:
+    - env: ALLOW_FAILURE=true
+
+before_install:
+  - "unset _JAVA_OPTIONS"
+  - "curl -O -L --retry 3 https://github.com/sormuras/bach/raw/master/install-jdk.sh"
 
 install:
-  - ./gradlew --version
+  - "source install-jdk.sh --url https://cdn.azul.com/zulu/bin/zulu8.33.0.1-jdk8.0.192-linux_x64.tar.gz"
+
+before_script:
+  - "./mvnw --version"
 
 script:
-  - ./gradlew --continue build
+  - "./mvnw install"
+
+after_success:
+  - "if [ master == $TRAVIS_BRANCH -a $TRAVIS_PULL_REQUEST == false -a ${OSSRH_USERNAME:=X} != X ]; then ./mvnw deploy --settings .travis-deploy-settings.xml; fi"
+
+before_cache:
+  - "git status"
 
 cache:
   directories:
-    - $HOME/.gradle
+    - $HOME/.m2/wrapper/
