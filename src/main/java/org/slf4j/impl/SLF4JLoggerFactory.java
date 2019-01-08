@@ -1,5 +1,5 @@
 /*
- * Copyright (c) OSGi Alliance (2016). All Rights Reserved.
+ * Copyright (c) OSGi Alliance (2016, 2018). All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,11 +39,11 @@ import org.osgi.framework.wiring.BundleWiring;
  */
 class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 	static class Central extends SecurityManager implements SynchronousBundleListener {
-		private static final Bundle										self;
-		private static final BundleContext								systemBundleContext;
-		private static final LoggerFactoryTracker						tracker;
-		private static final Central									central;
-		private static final ConcurrentMap<Bundle,SLF4JLoggerFactory>	factories;
+		private static final Bundle self;
+		static final BundleContext systemBundleContext;
+		static final LoggerFactoryTracker tracker;
+		private static final Central central;
+		private static final ConcurrentMap<Bundle, SLF4JLoggerFactory> factories;
 		static {
 			self = FrameworkUtil.getBundle(SLF4JLoggerFactory.class);
 			assert self != null;
@@ -89,8 +89,8 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 					continue;
 				}
 				if (foundGetLogger) {
-					Class< ? >[] callers = central.getClassContext();
-					Class< ? > caller = callers[i - 1];
+					Class<?>[] callers = central.getClassContext();
+					Class<?> caller = callers[i - 1];
 					Bundle b = FrameworkUtil.getBundle(caller);
 					return b != null ? b : self;
 				}
@@ -113,27 +113,31 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 			return tracker;
 		}
 
-		private Central() {}
+		private final PrivilegedAction<Void> selfRemove;
+
+		Central() {
+			selfRemove = new PrivilegedAction<Void>() {
+				@Override
+				public Void run() {
+					systemBundleContext.removeBundleListener(Central.this);
+					tracker.close();
+					return null;
+				}
+			};
+		}
 
 		@Override
 		public void bundleChanged(BundleEvent event) {
 			switch (event.getType()) {
-				case BundleEvent.UNRESOLVED :
-					Bundle b = event.getBundle();
-					if (b.equals(self)) {
-						factories.clear();
-						AccessController.doPrivileged(new PrivilegedAction<Void>() {
-							@Override
-							public Void run() {
-								systemBundleContext.removeBundleListener(Central.this);
-								tracker.close();
-								return null;
-							}
-						});
-					} else {
-						factories.remove(b);
-					}
-					break;
+			case BundleEvent.UNRESOLVED:
+				Bundle b = event.getBundle();
+				if (b.equals(self)) {
+					factories.clear();
+					AccessController.doPrivileged(selfRemove);
+				} else {
+					factories.remove(b);
+				}
+				break;
 			}
 		}
 	}
@@ -146,8 +150,8 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		return Central.getTracker();
 	}
 
-	private final ConcurrentMap<String,SLF4JLogger>	loggers;
-	private final Bundle							bundle;
+	private final ConcurrentMap<String, SLF4JLogger> loggers;
+	private final Bundle bundle;
 
 	SLF4JLoggerFactory(Bundle bundle) {
 		loggers = new ConcurrentHashMap<>();
@@ -165,8 +169,7 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		if (logger != null) {
 			return logger;
 		}
-		SLF4JLogger newLogger = new SLF4JLogger(bundle, name);
-		logger = loggers.putIfAbsent(name, newLogger);
-		return (logger != null) ? logger : newLogger;
+		logger = loggers.computeIfAbsent(name, n -> new SLF4JLogger(bundle, n));
+		return logger;
 	}
 }
