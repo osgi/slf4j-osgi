@@ -12,11 +12,7 @@ This information will help us review and fix your issue faster.
 
 ## Building
 
-The only thing you need to build is Java 7. We use Gradle to build and the repo 
-includes `gradlew`. You can use your system `gradle` but we require 
-at least version 2.3.
-
-`./gradlew build`    - Assembles and tests the projects  
+The only thing you need to build is Java 8 and Maven.
 
 We use [Travis CI](https://travis-ci.org/osgi/slf4j-osgi) and the repo includes a
 `.travis.yml` file to build on Travis CI.

@@ -1,6 +1,2 @@
-/.gradle/
-/build/
-/.metadata/
-/.classpath
-/.project
-/.settings/
+/target/
+/install-jdk.sh
