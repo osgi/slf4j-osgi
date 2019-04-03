@@ -24,10 +24,10 @@ before_script:
   - "./mvnw --version"
 
 script:
-  - "./mvnw install"
+  - "./mvnw --batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn install"
 
 after_success:
-  - "if [ master == $TRAVIS_BRANCH -a $TRAVIS_PULL_REQUEST == false -a ${OSSRH_USERNAME:=X} != X ]; then ./mvnw deploy --settings .travis-deploy-settings.xml; fi"
+  - "if [ master == $TRAVIS_BRANCH -a $TRAVIS_PULL_REQUEST == false -a ${OSSRH_USERNAME:=X} != X ]; then ./mvnw --batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn deploy --settings .travis-deploy-settings.xml; fi"
 
 before_cache:
   - "git status"
