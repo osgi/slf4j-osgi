@@ -17,7 +17,6 @@
 @Export
 @Version("1.7.0")
 @Header(name = Constants.FRAGMENT_HOST, value = "slf4j.api")
-@Header(name = Constants.BUNDLE_DESCRIPTION, value = "SLF4J over OSGi Log Service Binding; Version ${@version}.")
 package org.slf4j.impl;
 
 import org.osgi.annotation.bundle.Export;

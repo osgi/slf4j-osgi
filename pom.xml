@@ -8,16 +8,17 @@
     <version>1.7.0</version>
 
     <name>slf4j.osgi</name>
-    <description>SLF4J implementation over OSGi Loggers</description>
-    <url>https://www.osgi.org/</url>
+    <description>SLF4J over OSGi Log Service Binding</description>
+    <url>https://github.com/osgi/slf4j-osgi</url>
     <organization>
         <name>OSGi Alliance</name>
         <url>https://www.osgi.org/</url>
     </organization>
     <licenses>
         <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.opensource.org/licenses/apache2.0.php</url>
+            <name>Apache-2.0</name>
+            <comments>Apache License, Version 2.0</comments>
+            <url>https://opensource.org/licenses/apache2.0.php</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -30,6 +31,8 @@
         <developer>
             <id>osgi</id>
             <email>info@osgi.org</email>
+            <name>OSGi Alliance</name>
+            <organization>OSGi Alliance</organization>
         </developer>
     </developers>
 
@@ -37,7 +40,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bnd.version>4.1.0</bnd.version>
+        <bnd.version>4.2.0</bnd.version>
     </properties>
 
     <dependencies>
@@ -74,17 +77,7 @@
                     <version>${bnd.version}</version>
                     <configuration>
                         <bnd><![CDATA[
-Bundle-License: Apache-2.0;\
- link="http://www.apache.org/licenses/LICENSE-2.0";\
- description="Apache License, Version 2.0"
-Bundle-DocURL: https://www.osgi.org/
-Bundle-Developers: osgi; email=info@osgi.org; name="OSGi Alliance"; organization="OSGi Alliance"
 Bundle-Copyright: Copyright (c) OSGi Alliance (${now;YYYY}). All Rights Reserved.
-Bundle-Vendor: OSGi Alliance https://www.osgi.org/
-Bundle-SCM: url=https://github.com/osgi/slf4j-osgi, \
-            connection=scm:git:https://github.com/osgi/slf4j-osgi.git, \
-            developerConnection=scm:git:git@github.com:osgi/slf4j-osgi.git, \
-            tag=${Git-Descriptor}
 Git-Descriptor: ${system-allow-fail;git describe --dirty --always --abbrev=9}
 Git-SHA:        ${system-allow-fail;git rev-list -1 --no-abbrev-commit HEAD}
 -noextraheaders: true
