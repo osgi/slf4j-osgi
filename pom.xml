@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.osgi</groupId>
     <artifactId>slf4j.osgi</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1-SNAPSHOT</version>
 
     <name>slf4j.osgi</name>
     <description>SLF4J over OSGi Log Service Binding</description>
