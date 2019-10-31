@@ -1,15 +1,22 @@
-sudo: false
+git:
+  depth: false
 
 language: java
 
 env:
   global:
+    - LC_ALL=en_US.UTF-8
+    - JAVA8_JDK=https://cdn.azul.com/zulu/bin/zulu8.40.0.25-ca-jdk8.0.222-linux_x64.tar.gz
+    - JAVA11_JDK=https://cdn.azul.com/zulu/bin/zulu11.33.15-ca-jdk11.0.4-linux_x64.tar.gz
 
 matrix:
   include:
     - name: "OpenJDK8"
       env:
         - secure: dVvdiKYnBghgm4blVO3Qv7YS1fhv8aZrv51jlqaiP0RbigvHDsq5PJA+kRcn480KlAwcWaOxDsiaVKKqIrZj9gvWKI6qFQqqKic7tNoWYf1KS5pHKxBCnQIy2ugqIi6Nz1LVSniYnV1rMmykN1hn8Yjco/v4Yfl2buOsX7kzyzppmKdSjOHoPhJlKBH+7b+zDt99d7luvdEet8GNVMd8XX2qgvHz3TGxPBKEnyue/8tbe3IF+Vvt8Ohgy8U87uKTUyTqBObglCIn5KDVIliEdcv5TCsleTVyhCIyOg9zZeHxC+UZr7UxzJ+hcVdZH9xzHWSPiUQefTK2qBAOMlWsDok2XDqljl00YoPzidRbESHkY+t18yjmpcDGPCEZTgZxiCwUTCvT1ICBGh0tg755YAY53kF9kHaLbGHJ9YFVhmzw+eNWM/qTeoGShZxKw56psXFaGBd/3HS5SGMlAYoJzGKsIWhPtNJwF2PLTUlbu9fVbN1MrUMlLNy48g79opMflrEFchblb2yMDblAfNJBqoNIw8VMWkVjmMMre9eLW6wpN8EPtmUM3cN3CRlrmMGB2R6aCqwcD36ihJ0nU9vQOo0de2I2FI7mE6/y+i+4AlOltao8gDRM/FvB4GuwiXuTpAm9UXLubunxxw6Ei3IOdeo+t21VJhqTDcwSBWZEigM=
+    - name: "OpenJDK11"
+      install:
+        - "source install-jdk.sh --url $JAVA11_JDK"
   allow_failures:
     - env: ALLOW_FAILURE=true
 
@@ -18,20 +25,13 @@ before_install:
   - "curl -O -L --retry 3 https://github.com/sormuras/bach/raw/master/install-jdk.sh"
 
 install:
-  - "source install-jdk.sh --url https://cdn.azul.com/zulu/bin/zulu8.36.0.1-ca-jdk8.0.202-linux_x64.tar.gz"
+  - "source install-jdk.sh --url $JAVA8_JDK"
 
 before_script:
   - "./mvnw --version"
 
 script:
-  - "./mvnw --batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn install"
+  - "./mvnw --no-transfer-progress install"
 
 after_success:
-  - "if [ master == $TRAVIS_BRANCH -a $TRAVIS_PULL_REQUEST == false -a ${OSSRH_USERNAME:=X} != X ]; then ./mvnw deploy --settings .travis-deploy-settings.xml; fi"
-
-before_cache:
-  - "git status"
-
-cache:
-  directories:
-    - $HOME/.m2/wrapper/
+  - "if [ master == $TRAVIS_BRANCH -a $TRAVIS_PULL_REQUEST == false -a ${OSSRH_USERNAME:=X} != X ]; then ./mvnw --no-transfer-progress deploy --settings .travis-deploy-settings.xml; fi"
