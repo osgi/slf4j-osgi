@@ -13,27 +13,5 @@
       <password>${env.OSSRH_PASSWORD}</password>
     </server>
   </servers>
-  <profiles>
-    <profile>
-      <activation>
-        <activeByDefault/>
-      </activation>
-      <repositories>
-        <repository>
-          <id>ApacheCentral</id>
-          <name>Maven Central</name>
-          <url>https://repo.maven.apache.org/maven2/</url>
-          <layout>default</layout>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>ApacheCentral</id>
-          <name>Maven Central</name>
-          <url>https://repo.maven.apache.org/maven2/</url>
-          <layout>default</layout>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-  </profiles>
+  <mirrors/>
 </settings>
