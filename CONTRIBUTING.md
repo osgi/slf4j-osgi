@@ -12,10 +12,11 @@ This information will help us review and fix your issue faster.
 
 ## Building
 
-The only thing you need to build is Java 8 and Maven.
+The only thing you need to build is Java 8. We use Maven to build and the repo includes `mvnw`.
+You can use your system `mvn` but we require a recent version.
 
-We use [Travis CI](https://travis-ci.org/osgi/slf4j-osgi) and the repo includes a
-`.travis.yml` file to build on Travis CI.
+We use [GitHub Actions](https://github.com/osgi/slf4j-osgi/actions?query=workflow%3A%22CI+Build%22) and the repo includes a
+`.github/workflows/cibuild.yml` file to build via GitHub Actions.
 
 ## Workflow
 
@@ -52,10 +53,6 @@ unless you are already using Git 2.0 where it is the default.
 
 Finally, the third side of the triangle is pull requests from your fork repo to the
 main repo.
-
-Make sure to set up [Travis CI](https://travis-ci.org) for your fork repo to test your commits
-when they are pushed to your fork repo. Travis CI will also build any [pull requests you 
-submit](https://travis-ci.org/osgi/slf4j-osgi/pull_requests).
 
 ## Contribution guidelines
 
