@@ -1,5 +1,5 @@
 /*
- * Copyright (c) OSGi Alliance (2018). All Rights Reserved.
+ * Copyright (c) OSGi Alliance (2018, 2019). All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 @Export
 @Version("1.7.0")
-@Header(name = Constants.FRAGMENT_HOST, value = "slf4j.api")
+@Header(name = Constants.FRAGMENT_HOST, value = "slf4j.api;bundle-version=\"[1.7.0,1.8.0)\"")
 package org.slf4j.impl;
 
 import org.osgi.annotation.bundle.Export;
