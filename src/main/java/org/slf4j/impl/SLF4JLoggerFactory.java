@@ -1,5 +1,5 @@
 /*
- * Copyright (c) OSGi Alliance (2016, 2018). All Rights Reserved.
+ * Copyright (c) OSGi Alliance (2016, 2019). All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		private static BundleContext getSystemBundleContext(Bundle bundle) {
 			BundleContext bc = bundle.getBundleContext();
 			if (bc != null) {
-				return bc.getBundle(Constants.SYSTEM_BUNDLE_LOCATION).getBundleContext();
+				return bc.getBundle(Constants.SYSTEM_BUNDLE_ID).getBundleContext();
 			}
 			BundleWiring wiring = bundle.adapt(BundleWiring.class);
 			List<BundleWire> wires = wiring.getRequiredWires(PackageNamespace.PACKAGE_NAMESPACE);
