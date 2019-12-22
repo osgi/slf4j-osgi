@@ -44,9 +44,10 @@ public class StaticMarkerBinder implements MarkerFactoryBinder {
      */
     public static final StaticMarkerBinder SINGLETON = new StaticMarkerBinder();
 
-    final IMarkerFactory markerFactory = new BasicMarkerFactory();
+	final IMarkerFactory markerFactory;
 
     private StaticMarkerBinder() {
+		markerFactory = new BasicMarkerFactory();
     }
 
     /**
@@ -63,6 +64,7 @@ public class StaticMarkerBinder implements MarkerFactoryBinder {
      * Currently this method always returns an instance of 
      * {@link BasicMarkerFactory}.
      */
+	@Override
     public IMarkerFactory getMarkerFactory() {
         return markerFactory;
     }
@@ -71,6 +73,7 @@ public class StaticMarkerBinder implements MarkerFactoryBinder {
      * Currently, this method returns the class name of
      * {@link BasicMarkerFactory}.
      */
+	@Override
     public String getMarkerFactoryClassStr() {
         return BasicMarkerFactory.class.getName();
     }
