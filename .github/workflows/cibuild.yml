@@ -5,9 +5,11 @@ on:
     branches-ignore:
     - 'dependabot/**'
     paths-ignore:
+    - '.github/**/*codeql*'
     - '.github/*.yml'
   pull_request:
     paths-ignore:
+    - '.github/**/*codeql*'
     - '.github/*.yml'
 
 env:
