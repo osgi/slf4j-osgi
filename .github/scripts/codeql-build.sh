@@ -17,4 +17,4 @@
 # SPDX-License-Identifier: Apache-2.0
 #*******************************************************************************
 ./mvnw --batch-mode --version
-./mvnw --batch-mode --no-transfer-progress install "$@"
+./mvnw --batch-mode --no-transfer-progress test-compile "$@"
