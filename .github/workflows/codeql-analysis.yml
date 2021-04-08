@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
+        os: [ 'ubuntu-latest' ]
         java: [ '8' ]
     name: JDK${{ matrix.java }} ${{ matrix.os }} codeql-build.sh
     runs-on: ${{ matrix.os }}
