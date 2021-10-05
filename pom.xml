@@ -35,7 +35,7 @@
         <java.release>8</java.release>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <bnd.version>5.3.0</bnd.version>
+        <bnd.version>6.0.0</bnd.version>
         <slf4j.version>1.7.31</slf4j.version>
     </properties>
 
