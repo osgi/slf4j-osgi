@@ -36,7 +36,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <bnd.version>6.1.0</bnd.version>
-        <slf4j.version>1.7.35</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
     </properties>
 
     <url>https://www.osgi.org</url>
