@@ -294,7 +294,7 @@ class SLF4JLogger extends MarkerIgnoringBase {
 	Logger newStubLogger() {
 		final StubLogger delegate = new StubLogger();
 		final Class<?> delegateClass = delegate.getClass();
-		return (Logger) Proxy.newProxyInstance(delegateClass.getClassLoader(), new Class<?>[] { Logger.class }, (proxy, method, args) -> {
+		return (Logger) Proxy.newProxyInstance(delegateClass.getClassLoader(), new Class<?>[] {Logger.class}, (proxy, method, args) -> {
 			Method delegateMethod;
 			try {
 				delegateMethod = delegateClass.getMethod(method.getName(), method.getParameterTypes());
@@ -318,11 +318,11 @@ class SLF4JLogger extends MarkerIgnoringBase {
 	 */
 	@SuppressWarnings("unused")
 	class StubLogger {
-		private static final boolean	TRACE_ENABLED	= false;
-		private static final boolean	DEBUG_ENABLED	= false;
-		private static final boolean	INFO_ENABLED	= false;
-		private static final boolean	WARN_ENABLED	= true;
-		private static final boolean	ERROR_ENABLED	= true;
+		private static final boolean TRACE_ENABLED = false;
+		private static final boolean DEBUG_ENABLED = false;
+		private static final boolean INFO_ENABLED = false;
+		private static final boolean WARN_ENABLED = true;
+		private static final boolean ERROR_ENABLED = true;
 
 		StubLogger() {}
 

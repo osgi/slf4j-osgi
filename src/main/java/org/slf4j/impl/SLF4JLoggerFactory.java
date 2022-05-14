@@ -46,6 +46,7 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		static final LoggerFactoryTracker tracker;
 		private static final Central central;
 		private static final ConcurrentMap<Bundle, SLF4JLoggerFactory> factories;
+
 		static {
 			self = FrameworkUtil.getBundle(SLF4JLoggerFactory.class);
 			assert self != null;
@@ -67,26 +68,32 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		private static BundleContext getSystemBundleContext(Bundle bundle) {
 			BundleContext bc = bundle.getBundleContext();
 			if (bc != null) {
-				return bc.getBundle(Constants.SYSTEM_BUNDLE_ID).getBundleContext();
+				return bc.getBundle(Constants.SYSTEM_BUNDLE_ID)
+					.getBundleContext();
 			}
 			BundleWiring wiring = bundle.adapt(BundleWiring.class);
 			List<BundleWire> wires = wiring.getRequiredWires(PackageNamespace.PACKAGE_NAMESPACE);
 			for (BundleWire wire : wires) {
-				if ("org.osgi.framework"
-						.equals(wire.getCapability().getAttributes().get(PackageNamespace.PACKAGE_NAMESPACE))) {
-					return wire.getProviderWiring().getBundle().getBundleContext();
+				if ("org.osgi.framework".equals(wire.getCapability()
+					.getAttributes()
+					.get(PackageNamespace.PACKAGE_NAMESPACE))) {
+					return wire.getProviderWiring()
+						.getBundle()
+						.getBundleContext();
 				}
 			}
 			return null;
 		}
 
 		private static Bundle getCallerBundle() {
-			StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+			StackTraceElement[] stack = Thread.currentThread()
+				.getStackTrace();
 			boolean foundGetLogger = false;
 			for (int i = 5; i < stack.length; i++) {
 				StackTraceElement trace = stack[i];
-				if (trace.getClassName().equals("org.slf4j.LoggerFactory")
-						&& trace.getMethodName().equals("getLogger")) {
+				if (trace.getClassName()
+					.equals("org.slf4j.LoggerFactory") && trace.getMethodName()
+					.equals("getLogger")) {
 					foundGetLogger = true;
 					continue;
 				}
@@ -131,15 +138,15 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		@Override
 		public void bundleChanged(BundleEvent event) {
 			switch (event.getType()) {
-			case BundleEvent.UNRESOLVED:
-				Bundle b = event.getBundle();
-				if (b.equals(self)) {
-					factories.clear();
-					AccessController.doPrivileged(selfRemove);
-				} else {
-					factories.remove(b);
-				}
-				break;
+				case BundleEvent.UNRESOLVED:
+					Bundle b = event.getBundle();
+					if (b.equals(self)) {
+						factories.clear();
+						AccessController.doPrivileged(selfRemove);
+					} else {
+						factories.remove(b);
+					}
+					break;
 			}
 		}
 	}

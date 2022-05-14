@@ -23,17 +23,18 @@ import org.slf4j.spi.LoggerFactoryBinder;
 
 /**
  * slf4j-osgi implementation of org.slf4j.impl.StaticLoggerBinder.
- * 
+ *
  * @author $Id$
  */
 public class StaticLoggerBinder implements LoggerFactoryBinder {
 
-	private static final StaticLoggerBinder	SINGLETON;
+	private static final StaticLoggerBinder SINGLETON;
 	/**
 	 * Declare the version of the SLF4J API this implementation is compiled
 	 * against. The value of this field is modified with each major release.
 	 */
-	public static final String				REQUESTED_API_VERSION;
+	public static final String REQUESTED_API_VERSION;
+
 	static {
 		SINGLETON = new StaticLoggerBinder();
 		REQUESTED_API_VERSION = "1.7.0";
@@ -52,6 +53,7 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 
 	@Override
 	public String getLoggerFactoryClassStr() {
-		return getLoggerFactory().getClass().getName();
+		return getLoggerFactory().getClass()
+			.getName();
 	}
 }
