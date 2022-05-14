@@ -22,13 +22,17 @@ on:
   push:
     branches-ignore:
     - 'dependabot/**'
-    paths-ignore:
-    - '.github/**/*codeql*'
-    - '.github/*.yml'
+    paths:
+    - '**'
+    - '!docs/**'
+    - '!.github/**'
+    - '.github/**/*ci*'
   pull_request:
-    paths-ignore:
-    - '.github/**/*codeql*'
-    - '.github/*.yml'
+    paths:
+    - '**'
+    - '!docs/**'
+    - '!.github/**'
+    - '.github/**/*ci*'
 
 env:
   LC_ALL: en_US.UTF-8
@@ -40,6 +44,9 @@ env:
 defaults:
   run:
     shell: bash
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -67,7 +74,7 @@ jobs:
     - name: Build
       id: build
       run: |
-        ./.github/scripts/build.sh
+        ./.github/scripts/ci-build.sh
     - name: Configure settings.xml for Publish
       if: ${{ matrix.canonical }}
       uses: actions/setup-java@v3
@@ -82,7 +89,7 @@ jobs:
     - name: Publish
       if: ${{ matrix.canonical }}
       run: |
-        ./.github/scripts/publish.sh -Possrh
+        ./.github/scripts/ci-publish.sh -Possrh
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}

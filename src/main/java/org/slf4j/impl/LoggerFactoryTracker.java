@@ -35,16 +35,16 @@ import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * slf4j-osgi implementation OSGi Logger handler.
- * 
+ *
  * @author $Id$
  */
-class LoggerFactoryTracker extends ServiceTracker<Object,Object> {
+class LoggerFactoryTracker extends ServiceTracker<Object, Object> {
 	static class Entry {
-		private final Bundle	bundle;
-		private final String	name;
-		private final LogLevel	level;
-		private final String	message;
-		private final Throwable	t;
+		private final Bundle bundle;
+		private final String name;
+		private final LogLevel level;
+		private final String message;
+		private final Throwable t;
 
 		Entry(Bundle bundle, String name, LogLevel level, String message, Throwable t) {
 			this.bundle = bundle;
@@ -71,31 +71,31 @@ class LoggerFactoryTracker extends ServiceTracker<Object,Object> {
 		void log(LoggerFactory factory) {
 			Logger logger = factory.getLogger(bundle, name, Logger.class);
 			switch (level) {
-				case TRACE :
+				case TRACE:
 					logger.trace(message, t);
 					break;
-				case DEBUG :
+				case DEBUG:
 					logger.debug(message, t);
 					break;
-				case INFO :
+				case INFO:
 					logger.info(message, t);
 					break;
-				case WARN :
+				case WARN:
 					logger.warn(message, t);
 					break;
-				case ERROR :
+				case ERROR:
 					logger.error(message, t);
 					break;
-				default :
+				default:
 					logger.audit(message, t);
 					break;
 			}
 		}
 	}
 
-	private static final int			QUEUE_SIZE		= 200;
-	private final BlockingQueue<Entry>	queue;
-	private volatile LoggerFactory		firstFactory	= null;
+	private static final int QUEUE_SIZE = 200;
+	private final BlockingQueue<Entry> queue;
+	private volatile LoggerFactory firstFactory = null;
 
 	LoggerFactoryTracker(BundleContext context) {
 		super(context, LoggerFactory.class.getName(), null);

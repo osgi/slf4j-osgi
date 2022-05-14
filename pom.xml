@@ -18,25 +18,39 @@
  -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.osgi</groupId>
 	<artifactId>slf4j.osgi</artifactId>
+	<version>${revision}</version>
 	<description>SLF4J over OSGi Log Service Binding</description>
 	<name>slf4j.osgi</name>
-	<version>1.7.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<properties>
+		<!-- Version also in @Version in package-info.java -->
+		<revision>1.7.1-SNAPSHOT</revision>
 		<project.build.outputTimestamp>1980-02-01T00:00:00Z</project.build.outputTimestamp>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!--suppress UnresolvedMavenProperty -->
+		<bnd.resolve.skip>${maven.test.skip}</bnd.resolve.skip>
 		<java.version>1.8</java.version>
 		<java.release>8</java.release>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<bnd.version>6.2.0</bnd.version>
 		<slf4j.version>1.7.36</slf4j.version>
+		<osgi.annotation.version>8.1.0</osgi.annotation.version>
+		<osgi.dto.version>1.0.0</osgi.dto.version>
+		<osgi.resource.version>1.0.0</osgi.resource.version>
+		<osgi.framework.version>1.8.0</osgi.framework.version>
+		<osgi.tracker.version>1.5.4</osgi.tracker.version>
+		<osgi.log.version>1.4.0</osgi.log.version>
+		<junit-jupiter.version>5.8.2</junit-jupiter.version>
+		<assertj.version>3.22.0</assertj.version>
+		<osgi-test.version>1.1.0</osgi-test.version>
 	</properties>
 
 	<url>https://www.osgi.org</url>
@@ -56,7 +70,7 @@
 		<url>https://github.com/osgi/slf4j-osgi</url>
 		<connection>scm:git:https://github.com/osgi/slf4j-osgi.git</connection>
 		<developerConnection>scm:git:git@github.com:osgi/slf4j-osgi.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>${revision}</tag>
 	</scm>
 	<developers>
 		<developer>
@@ -84,34 +98,157 @@
 		</mailingList>
 	</mailingLists>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>osgi.annotation</artifactId>
+				<version>${osgi.annotation.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.service.log</artifactId>
+				<version>${osgi.log.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.dto</artifactId>
+				<version>${osgi.dto.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.resource</artifactId>
+				<version>${osgi.resource.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.framework</artifactId>
+				<version>${osgi.framework.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.util.tracker</artifactId>
+				<version>${osgi.tracker.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-nop</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>${assertj.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit-jupiter.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.test.common</artifactId>
+				<version>${osgi-test.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.test.junit5</artifactId>
+				<version>${osgi-test.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.test.assertj.framework</artifactId>
+				<version>${osgi-test.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.test.assertj.log</artifactId>
+				<version>${osgi-test.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.platform</groupId>
+				<artifactId>org.eclipse.osgi</artifactId>
+				<version>3.17.200</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>osgi.annotation</artifactId>
-			<version>8.1.0</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
-			<artifactId>osgi.core</artifactId>
-			<version>6.0.0</version>
-			<scope>provided</scope>
+			<artifactId>org.osgi.dto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.resource</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.framework</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.util.tracker</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.service.log</artifactId>
-			<version>1.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-nop</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.test.common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.test.assertj.framework</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.test.junit5</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.test.assertj.log</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -123,8 +260,14 @@
 					<artifactId>bnd-maven-plugin</artifactId>
 					<version>${bnd.version}</version>
 					<extensions>true</extensions>
-					<configuration>
-						<bnd><![CDATA[
+					<executions>
+						<execution>
+							<id>default-jar</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<configuration>
+								<bnd><![CDATA[
 -includeresource.legal:\
  "META-INF/=${project.basedir}/LICENSE",\
  "META-INF/=${project.basedir}/NOTICE"
@@ -133,13 +276,22 @@
 -fixupmessages.impl:\
  "Version for package org\\.slf4j\\.impl is set to different values in the source"
 ]]></bnd>
-					</configuration>
-					<executions>
+							</configuration>
+						</execution>
+						<!-- Integration Test Configuration -->
 						<execution>
-							<id>jar</id>
+							<id>test-jar</id>
 							<goals>
-								<goal>jar</goal>
+								<goal>test-jar</goal>
 							</goals>
+							<configuration>
+								<artifactFragment>false</artifactFragment>
+								<bnd><![CDATA[
+-noextraheaders: true
+-noimportjava: true
+							]]></bnd>
+								<testCases>junit5</testCases>
+							</configuration>
 						</execution>
 					</executions>
 				</plugin>
@@ -165,6 +317,61 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>biz.aQute.bnd</groupId>
+					<artifactId>bnd-resolver-maven-plugin</artifactId>
+					<version>${bnd.version}</version>
+					<executions>
+						<!-- Integration Test Configuration -->
+						<execution>
+							<id>resolve-test</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>resolve</goal>
+							</goals>
+							<configuration>
+								<bndruns>
+									<bndrun>test.bndrun</bndrun>
+								</bndruns>
+								<failOnChanges>false</failOnChanges>
+								<includeDependencyManagement>true</includeDependencyManagement>
+								<reportOptional>false</reportOptional>
+								<scopes>
+									<scope>compile</scope>
+									<scope>runtime</scope>
+									<scope>test</scope>
+								</scopes>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>biz.aQute.bnd</groupId>
+					<artifactId>bnd-testing-maven-plugin</artifactId>
+					<version>${bnd.version}</version>
+					<executions>
+						<!-- OSGi integration tests execution -->
+						<execution>
+							<id>testing</id>
+							<goals>
+								<goal>testing</goal>
+							</goals>
+							<configuration>
+								<bndruns>
+									<bndrun>test.bndrun</bndrun>
+								</bndruns>
+								<failOnChanges>false</failOnChanges>
+								<includeDependencyManagement>true</includeDependencyManagement>
+								<resolve>false</resolve>
+								<scopes>
+									<scope>compile</scope>
+									<scope>runtime</scope>
+									<scope>test</scope>
+								</scopes>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.10.1</version>
@@ -185,6 +392,10 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.22.2</version>
+					<!-- We let bnd-testing-maven-plugin do all the testing -->
+					<configuration>
+						<skipTests>true</skipTests>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -221,6 +432,7 @@
 					<configuration>
 						<detectJavaApiLink>false</detectJavaApiLink>
 						<doclint>none</doclint>
+						<notimestamp>true</notimestamp>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -247,9 +459,6 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>flatten-maven-plugin</artifactId>
 					<version>1.2.7</version>
-					<configuration>
-						<flattenMode>oss</flattenMode>
-					</configuration>
 					<executions>
 						<execution>
 							<id>flatten</id>
@@ -257,6 +466,9 @@
 							<goals>
 								<goal>flatten</goal>
 							</goals>
+							<configuration>
+								<flattenMode>oss</flattenMode>
+							</configuration>
 						</execution>
 						<execution>
 							<id>flatten-clean</id>
@@ -279,16 +491,12 @@
 				<artifactId>bnd-baseline-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
+				<groupId>biz.aQute.bnd</groupId>
+				<artifactId>bnd-resolver-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
+				<groupId>biz.aQute.bnd</groupId>
+				<artifactId>bnd-testing-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -316,10 +524,54 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>bnd-next</id>
+			<properties>
+				<bnd.version>6.4.0-SNAPSHOT</bnd.version>
+			</properties>
+			<repositories>
+				<repository>
+					<id>bnd-releases</id>
+					<url>https://bndtools.jfrog.io/bndtools/libs-release/</url>
+					<layout>default</layout>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>bnd-snapshots</id>
+					<url>https://bndtools.jfrog.io/bndtools/libs-snapshot/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>bnd-releases</id>
+					<url>https://bndtools.jfrog.io/bndtools/libs-release/</url>
+					<layout>default</layout>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+				<pluginRepository>
+					<id>bnd-snapshots</id>
+					<url>https://bndtools.jfrog.io/bndtools/libs-snapshot/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+		<profile>
 			<id>ossrh</id>
 			<properties>
 				<skipTests>true</skipTests>
-				<invoker.skip>true</invoker.skip>
+				<maven.test.skip>true</maven.test.skip>
+				<bnd.baseline.skip>true</bnd.baseline.skip>
+				<bnd.resolve.skip>true</bnd.resolve.skip>
 			</properties>
 			<build>
 				<plugins>
