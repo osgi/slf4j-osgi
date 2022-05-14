@@ -36,7 +36,7 @@ import org.osgi.framework.wiring.BundleWiring;
 
 /**
  * slf4j-osgi implementation of org.slf4j.ILoggerFactory.
- * 
+ *
  * @author $Id$
  */
 class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
@@ -162,7 +162,7 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 
 	/**
 	 * Return a named Logger.
-	 * 
+	 *
 	 * @return A Logger for the specified name.
 	 */
 	@Override
@@ -171,7 +171,7 @@ class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 		if (logger != null) {
 			return logger;
 		}
-		logger = loggers.computeIfAbsent(name, n -> new SLF4JLogger(bundle, n));
+		logger = loggers.computeIfAbsent(name, n -> new SLF4JLogger(bundle, n, getTracker()));
 		return logger;
 	}
 }

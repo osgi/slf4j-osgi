@@ -26,23 +26,27 @@ import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
 /**
  * slf4j-osgi implementation of org.slf4j.Logger.
- * 
+ *
  * @author $Id$
  */
 class SLF4JLogger extends MarkerIgnoringBase {
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
 	private static final Class<StubLogger> stubClass = StubLogger.class;
 	final transient Bundle bundle;
 	final transient LoggerFactoryTracker tracker;
 	private transient volatile Logger stub;
 
-	SLF4JLogger(Bundle bundle, String name) {
+	SLF4JLogger(Bundle bundle, String name, LoggerFactoryTracker tracker) {
 		this.name = name;
 		this.bundle = bundle;
-		tracker = SLF4JLoggerFactory.getTracker();
+		this.tracker = tracker;
 	}
 
 	private Logger getLogger() {
@@ -50,7 +54,7 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		if (logger == null) {
 			logger = stub;
 			if (logger == null) {
-				stub = logger = new StubLogger();
+				stub = logger = newStubLogger();
 			}
 		}
 		return logger;
@@ -282,193 +286,124 @@ class SLF4JLogger extends MarkerIgnoringBase {
 	}
 
 	/**
+	 * Make a new StubLogger for when no LoggerFactory is available.
+	 * <p>
+	 * Uses Proxy and reflection to avoid directly implementing org.osgi.service.log.Logger
+	 * and thus using a narrow provider import version range for the org.osgi.service.log package.
+	 */
+	Logger newStubLogger() {
+		final StubLogger delegate = new StubLogger();
+		final Class<?> delegateClass = delegate.getClass();
+		return (Logger) Proxy.newProxyInstance(delegateClass.getClassLoader(), new Class<?>[] { Logger.class }, (proxy, method, args) -> {
+			Method delegateMethod;
+			try {
+				delegateMethod = delegateClass.getMethod(method.getName(), method.getParameterTypes());
+			} catch (NoSuchMethodException e) {
+				throw new UnsupportedOperationException(e);
+			}
+			try {
+				return delegateMethod.invoke(delegate, args);
+			} catch (InvocationTargetException e) {
+				Throwable t = e;
+				for (Throwable cause; (t instanceof InvocationTargetException) && ((cause = t.getCause()) != null); ) {
+					t = cause;
+				}
+				throw t;
+			}
+		});
+	}
+
+	/**
 	 * Used when no LoggerFactory is available.
 	 */
-	class StubLogger implements Logger {
+	@SuppressWarnings("unused")
+	class StubLogger {
 		private static final boolean	TRACE_ENABLED	= false;
 		private static final boolean	DEBUG_ENABLED	= false;
 		private static final boolean	INFO_ENABLED	= false;
 		private static final boolean	WARN_ENABLED	= true;
 		private static final boolean	ERROR_ENABLED	= true;
 
-		@Override
+		StubLogger() {}
+
 		public String getName() {
 			return SLF4JLogger.this.getName();
 		}
 
-		@Override
 		public boolean isTraceEnabled() {
 			return TRACE_ENABLED;
 		}
 
-		@Override
 		public void trace(String msg) {
 			if (TRACE_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.TRACE, msg, null);
 			}
 		}
 
-		@Override
 		public void trace(String msg, Object t) {
 			if (TRACE_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.TRACE, msg, (Throwable) t);
 			}
 		}
 
-		@Override
-		public void trace(String format, Object arg1, Object arg2) {
-			if (TRACE_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public void trace(String format, Object... arguments) {
-			if (TRACE_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public <E extends Exception> void trace(LoggerConsumer<E> consumer) throws E {
-			if (TRACE_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
 		public boolean isDebugEnabled() {
 			return DEBUG_ENABLED;
 		}
 
-		@Override
 		public void debug(String msg) {
 			if (DEBUG_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.DEBUG, msg, null);
 			}
 		}
 
-		@Override
 		public void debug(String msg, Object t) {
 			if (DEBUG_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.DEBUG, msg, (Throwable) t);
 			}
 		}
 
-		@Override
-		public void debug(String format, Object arg1, Object arg2) {
-			if (DEBUG_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public void debug(String format, Object... arguments) {
-			if (DEBUG_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public <E extends Exception> void debug(LoggerConsumer<E> consumer) throws E {
-			if (DEBUG_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
 		public boolean isInfoEnabled() {
 			return INFO_ENABLED;
 		}
 
-		@Override
 		public void info(String msg) {
 			if (INFO_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.INFO, msg, null);
 			}
 		}
 
-		@Override
 		public void info(String msg, Object t) {
 			if (INFO_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.INFO, msg, (Throwable) t);
 			}
 		}
 
-		@Override
-		public void info(String format, Object arg1, Object arg2) {
-			if (INFO_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public void info(String format, Object... arguments) {
-			if (INFO_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public <E extends Exception> void info(LoggerConsumer<E> consumer) throws E {
-			if (INFO_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
 		public boolean isWarnEnabled() {
 			return WARN_ENABLED;
 		}
 
-		@Override
 		public void warn(String msg) {
 			if (WARN_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.WARN, msg, null);
 			}
 		}
 
-		@Override
 		public void warn(String msg, Object t) {
 			if (WARN_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.WARN, msg, (Throwable) t);
 			}
 		}
 
-		@Override
-		public void warn(String format, Object arg1, Object arg2) {
-			if (WARN_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public void warn(String format, Object... arguments) {
-			if (WARN_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public <E extends Exception> void warn(LoggerConsumer<E> consumer) throws E {
-			if (WARN_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
 		public boolean isErrorEnabled() {
 			return ERROR_ENABLED;
 		}
 
-		@Override
 		public void error(String msg) {
 			if (ERROR_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.ERROR, msg, null);
 			}
 		}
 
-		@Override
 		public void error(String msg, Object t) {
 			if (ERROR_ENABLED) {
 				tracker.log(bundle, getName(), LogLevel.ERROR, msg, (Throwable) t);
@@ -476,44 +411,8 @@ class SLF4JLogger extends MarkerIgnoringBase {
 		}
 
 		@Override
-		public void error(String format, Object arg1, Object arg2) {
-			if (ERROR_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public void error(String format, Object... arguments) {
-			if (ERROR_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public <E extends Exception> void error(LoggerConsumer<E> consumer) throws E {
-			if (ERROR_ENABLED) {
-				throw new UnsupportedOperationException();
-			}
-		}
-
-		@Override
-		public void audit(String message) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void audit(String format, Object arg) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void audit(String format, Object arg1, Object arg2) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void audit(String format, Object... arguments) {
-			throw new UnsupportedOperationException();
+		public String toString() {
+			return getClass().getName() + "(" + getName() + ")";
 		}
 	}
 }
