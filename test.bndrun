@@ -54,5 +54,5 @@
 	org.osgi.test.common;version='[1.1.0,1.1.1)',\
 	org.osgi.test.junit5;version='[1.1.0,1.1.1)',\
 	slf4j.api;version='[1.7.36,1.7.37)',\
-	slf4j.osgi;version='[1.7.1,1.7.2)',\
-	slf4j.osgi-tests;version='[1.7.1,1.7.2)'
+	slf4j.osgi;version='[1.7.2,1.7.3)',\
+	slf4j.osgi-tests;version='[1.7.2,1.7.3)'
