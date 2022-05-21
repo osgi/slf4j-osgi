@@ -18,17 +18,16 @@
 
 package org.slf4j.impl;
 
-import org.osgi.framework.Bundle;
-import org.osgi.service.log.LogLevel;
-import org.osgi.service.log.Logger;
-import org.osgi.service.log.LoggerConsumer;
-import org.slf4j.helpers.FormattingTuple;
-import org.slf4j.helpers.MarkerIgnoringBase;
-import org.slf4j.helpers.MessageFormatter;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+
+import org.osgi.framework.Bundle;
+import org.osgi.service.log.LogLevel;
+import org.osgi.service.log.Logger;
+import org.slf4j.helpers.FormattingTuple;
+import org.slf4j.helpers.MarkerIgnoringBase;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
  * slf4j-osgi implementation of org.slf4j.Logger.
