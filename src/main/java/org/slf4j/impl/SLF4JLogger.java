@@ -301,7 +301,11 @@ class SLF4JLogger extends MarkerIgnoringBase {
 				throw new UnsupportedOperationException(e);
 			}
 			try {
-				return delegateMethod.invoke(delegate, args);
+				Object result = delegateMethod.invoke(delegate, args);
+				if (result == delegate) { // returning "this"
+					return proxy;
+				}
+				return result;
 			} catch (InvocationTargetException e) {
 				Throwable t = e;
 				for (Throwable cause; (t instanceof InvocationTargetException) && ((cause = t.getCause()) != null); ) {
