@@ -51,7 +51,7 @@
 		<junit-jupiter.version>5.8.2</junit-jupiter.version>
 		<assertj.version>3.23.1</assertj.version>
 		<bytebuddy.version>1.12.12</bytebuddy.version>
-		<osgi-test.version>1.2.0</osgi-test.version>
+		<osgi-test.version>1.2.1</osgi-test.version>
 	</properties>
 
 	<url>https://www.osgi.org</url>
@@ -466,6 +466,9 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>flatten-maven-plugin</artifactId>
 					<version>1.2.7</version>
+					<configuration>
+						<flattenMode>oss</flattenMode>
+					</configuration>
 					<executions>
 						<execution>
 							<id>flatten</id>
@@ -473,9 +476,6 @@
 							<goals>
 								<goal>flatten</goal>
 							</goals>
-							<configuration>
-								<flattenMode>oss</flattenMode>
-							</configuration>
 						</execution>
 						<execution>
 							<id>flatten-clean</id>
