@@ -16,12 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
 
-@Export
-@Version("1.7.2")
-@Header(name = Constants.FRAGMENT_HOST, value = "slf4j.api;bundle-version=\"[1.7.0,1.8.0)\"")
-package org.slf4j.impl;
+@Version("2.0.0")
+package org.osgi.slf4j;
 
-import org.osgi.annotation.bundle.Export;
-import org.osgi.annotation.bundle.Header;
 import org.osgi.annotation.versioning.Version;
-import org.osgi.framework.Constants;
