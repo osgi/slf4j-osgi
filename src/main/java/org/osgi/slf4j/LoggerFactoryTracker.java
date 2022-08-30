@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
 
-package org.slf4j.impl;
+package org.osgi.slf4j;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -35,8 +35,6 @@ import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * slf4j-osgi implementation OSGi Logger handler.
- *
- * @author $Id$
  */
 class LoggerFactoryTracker extends ServiceTracker<Object, Object> {
 	static class Entry {

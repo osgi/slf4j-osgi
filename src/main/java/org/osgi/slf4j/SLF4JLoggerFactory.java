@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
 
-package org.slf4j.impl;
+package org.osgi.slf4j;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -36,8 +36,6 @@ import org.osgi.framework.wiring.BundleWiring;
 
 /**
  * slf4j-osgi implementation of org.slf4j.ILoggerFactory.
- *
- * @author $Id$
  */
 class SLF4JLoggerFactory implements org.slf4j.ILoggerFactory {
 	static class Central extends SecurityManager implements SynchronousBundleListener {

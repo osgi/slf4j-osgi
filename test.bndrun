@@ -31,10 +31,7 @@
 #-runjdb: 8080
 
 -runrequires: \
-	bnd.identity;id='${project.artifactId}',\
-	bnd.identity;id='${project.artifactId}-tests',\
-	bnd.identity;id='junit-jupiter-engine',\
-	bnd.identity;id='junit-platform-launcher'
+	bnd.identity;id='${project.artifactId}-tests'
 # This will help us keep -runbundles sorted
 -runstartlevel: \
     order=sortbynameversion,\
@@ -42,18 +39,19 @@
 # The following is calculated by the bnd-resolver-maven-plugin
 -runbundles: \
 	assertj-core;version='[3.23.1,3.23.2)',\
-	junit-jupiter-api;version='[5.8.2,5.8.3)',\
-	junit-jupiter-engine;version='[5.8.2,5.8.3)',\
-	junit-jupiter-params;version='[5.8.2,5.8.3)',\
-	junit-platform-commons;version='[1.8.2,1.8.3)',\
-	junit-platform-engine;version='[1.8.2,1.8.3)',\
-	junit-platform-launcher;version='[1.8.2,1.8.3)',\
-	net.bytebuddy.byte-buddy;version='[1.12.12,1.12.13)',\
+	junit-jupiter-api;version='[5.9.0,5.9.1)',\
+	junit-jupiter-engine;version='[5.9.0,5.9.1)',\
+	junit-jupiter-params;version='[5.9.0,5.9.1)',\
+	junit-platform-commons;version='[1.9.0,1.9.1)',\
+	junit-platform-engine;version='[1.9.0,1.9.1)',\
+	junit-platform-launcher;version='[1.9.0,1.9.1)',\
+	net.bytebuddy.byte-buddy;version='[1.12.14,1.12.15)',\
+	org.apache.aries.spifly.dynamic.framework.extension;version='[1.3.5,1.3.6)',\
 	org.opentest4j;version='[1.2.0,1.2.1)',\
 	org.osgi.test.assertj.framework;version='[1.2.1,1.2.2)',\
 	org.osgi.test.assertj.log;version='[1.2.1,1.2.2)',\
 	org.osgi.test.common;version='[1.2.1,1.2.2)',\
 	org.osgi.test.junit5;version='[1.2.1,1.2.2)',\
-	slf4j.api;version='[1.7.36,1.7.37)',\
-	slf4j.osgi;version='[1.7.2,1.7.3)',\
-	slf4j.osgi-tests;version='[1.7.2,1.7.3)'
+	slf4j.api;version='[2.0.0,2.0.1)',\
+	slf4j.osgi;version='[2.0.0,2.0.1)',\
+	slf4j.osgi-tests;version='[2.0.0,2.0.1)'

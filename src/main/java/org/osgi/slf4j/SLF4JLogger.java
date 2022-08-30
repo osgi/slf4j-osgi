@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
 
-package org.slf4j.impl;
+package org.osgi.slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,15 +26,13 @@ import org.osgi.framework.Bundle;
 import org.osgi.service.log.LogLevel;
 import org.osgi.service.log.Logger;
 import org.slf4j.helpers.FormattingTuple;
-import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
 /**
  * slf4j-osgi implementation of org.slf4j.Logger.
- *
- * @author $Id$
  */
-class SLF4JLogger extends MarkerIgnoringBase {
+@SuppressWarnings("deprecation")
+class SLF4JLogger extends org.slf4j.helpers.MarkerIgnoringBase {
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
 	private static final Class<StubLogger> stubClass = StubLogger.class;
