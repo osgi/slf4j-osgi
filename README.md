@@ -9,6 +9,22 @@ Want to hack on slf4j-osgi? See [CONTRIBUTING.md](CONTRIBUTING.md) for informati
 They are probably not perfect, please let us know if anything feels
 wrong or incomplete.
 
+## Versions
+
+### 1.7
+
+slf4j-osgi versions 1.7.x are for use with slf4j-api versions 1.7.x.
+The slf4j-osgi bundle is a fragment which attaches to the slf4j-api bundle to provide the ILoggerFactory implementation.
+
+### 2.0
+
+slf4j-osgi versions 2.0.x are for use with slf4j-api versions 2.0.x.
+In slf4j 2.0, the mechanism by which slf4j-api locates the ILoggerFactory implementation was changed to use the ServiceLoader mechanism.
+
+Both slf4j-api and slf4j-osgi now use the [OSGi Service Loader Mediator](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.loader.html) specification to perform the mediation between the ServiceLoader consumer and provider.
+When using slf4j-osgi, you will also need to make sure an implementation of the OSGi Service Loader Mediator specification, such as [Apache Aries SPI Fly](https://aries.apache.org/documentation/modules/spi-fly.html), is installed.
+For slf4j-osgi, [`org.apache.aries.spifly.dynamic.framework.extension`](https://aries.apache.org/documentation/modules/spi-fly.html#_dynamic_weaving_framework_extension) is recommended.
+
 ## Building
 
 We use Maven to build and the repo includes `mvnw`.
