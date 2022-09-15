@@ -32,3 +32,14 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+  # Maintain dependencies for maven in branch-1.7
+  # Ignore slf4j updates for major version
+  - package-ecosystem: "maven"
+    directory: "/"
+    target-branch: "branch-1.7"
+    schedule:
+        interval: "daily"
+    ignore:
+    - dependency-name: "org.slf4j:*"
+      update-types: ["version-update:semver-major"]
