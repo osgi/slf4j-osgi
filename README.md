@@ -1,6 +1,6 @@
 <h1>SLF4J Binding for OSGi Log Service</h1>
 
-This workspace repository contains the SLF4J Binding for OSGi Log Service 1.4 and later
+This workspace repository contains the SLF4J Binding for OSGi Log Service 1.4 and later.
 
 ## Contributing
 
