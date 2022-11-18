@@ -351,6 +351,7 @@
 								<bndruns>
 									<include>test.bndrun</include>
 								</bndruns>
+								<outputBndrunDir>${project.build.directory}</outputBndrunDir>
 								<failOnChanges>false</failOnChanges>
 								<includeDependencyManagement>true</includeDependencyManagement>
 								<reportOptional>false</reportOptional>
@@ -378,6 +379,7 @@
 								<bndruns>
 									<include>test.bndrun</include>
 								</bndruns>
+								<bndrunDir>${project.build.directory}</bndrunDir>
 								<failOnChanges>false</failOnChanges>
 								<includeDependencyManagement>true</includeDependencyManagement>
 								<resolve>false</resolve>
