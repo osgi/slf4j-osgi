@@ -33,6 +33,13 @@ updates:
     schedule:
       interval: "daily"
 
+  # Maintain dependencies for GitHub Actions in branch-1.7
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "branch-1.7"
+    schedule:
+        interval: "daily"
+
   # Maintain dependencies for maven in branch-1.7
   # Ignore slf4j updates for major version
   - package-ecosystem: "maven"
