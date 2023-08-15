@@ -50,7 +50,7 @@
 		<osgi.log.version>1.4.0</osgi.log.version>
 		<junit-jupiter.version>5.9.3</junit-jupiter.version>
 		<assertj.version>3.24.2</assertj.version>
-		<bytebuddy.version>1.14.5</bytebuddy.version>
+		<bytebuddy.version>1.14.6</bytebuddy.version>
 		<osgi-test.version>1.2.1</osgi-test.version>
 	</properties>
 
